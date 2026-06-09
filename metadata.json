@@ -1,0 +1,6 @@
+{
+  "name": "Apurtuarte Benjamin 2016 Dashboard",
+  "description": "Dashboard de estadísticas, fichas de jugadores, jornadas y comparador del equipo Apurtuarte Benjamín 2016.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
