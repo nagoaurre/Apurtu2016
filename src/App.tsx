@@ -44,9 +44,6 @@ export default function App() {
     return true;
   });
 
-  // Menú móvil responsive toggler
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
   useEffect(() => {
     const root = window.document.documentElement;
     if (darkMode) {
@@ -87,14 +84,12 @@ export default function App() {
   const focusPlayerProfile = (dorsal: number | null) => {
     setSelectedPlayerDorsal(dorsal);
     setActiveTab("jugadores");
-    setMobileMenuOpen(false);
   };
 
   // Navegación rápida de jornada
   const focusJornadaDetails = (numero: number) => {
     setSelectedJornada(numero);
     setActiveTab("jornadas");
-    setMobileMenuOpen(false);
   };
 
   // Definición de las pestañas de navegación
@@ -111,99 +106,68 @@ export default function App() {
   return (
     <div className="min-h-screen bg-slate-50 text-slate-800 dark:bg-slate-950 dark:text-slate-100 font-sans antialiased transition-colors duration-200 selection:bg-indigo-500/30">
       
-      {/* Top Navigation Bar (Vibrant Indigo theme) */}
+      {/* Top Navigation Bar with Integrated Row Layout */}
       <header className="sticky top-0 z-40 bg-indigo-700 dark:bg-indigo-950 text-white shadow-lg border-b border-indigo-850/40 transition-all">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           
-          {/* Logo / Club Title */}
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-indigo-700 shadow-md">
-              <Landmark className="w-5.5 h-5.5" />
+          {/* Row 1: Brand Logo / Club Title & Theme Operations */}
+          <div className="h-16 flex items-center justify-between gap-4 border-b border-indigo-600/30 dark:border-indigo-900/30">
+            
+            {/* Logo / Club Title */}
+            <div className="flex items-center gap-3">
+              <div className="w-10 h-10 rounded-xl bg-white flex items-center justify-center text-indigo-700 shadow-md">
+                <Landmark className="w-5.5 h-5.5" />
+              </div>
+              <div>
+                <p className="text-sm font-black tracking-tight leading-none uppercase text-white">
+                  {appState.equipo.equipo}
+                </p>
+                <p className="text-[10px] font-bold text-indigo-200 font-mono tracking-wider mt-0.5">
+                  TEMPORADA {appState.equipo.temporada}
+                </p>
+              </div>
             </div>
-            <div>
-              <p className="text-sm font-black tracking-tight leading-none uppercase text-white">
-                {appState.equipo.equipo}
-              </p>
-              <p className="text-[10px] font-bold text-indigo-200 font-mono tracking-wider mt-0.5">
-                TEMPORADA {appState.equipo.temporada}
-              </p>
+
+            {/* Right Header Operations (Theme toggle only, no hamburger menu required) */}
+            <div className="flex items-center gap-2">
+              <button
+                onClick={() => setDarkMode(!darkMode)}
+                className="p-2.5 rounded-xl border border-indigo-650 dark:border-indigo-850 bg-indigo-800 dark:bg-indigo-900 shadow-xs hover:bg-indigo-650 dark:hover:bg-indigo-800 text-indigo-100 transition-all cursor-pointer active:scale-95"
+                title={darkMode ? "Estilo claro" : "Estilo oscuro"}
+              >
+                {darkMode ? <Sun className="w-4.5 h-4.5 text-amber-400" /> : <Moon className="w-4.5 h-4.5 text-white" />}
+              </button>
             </div>
+
           </div>
 
-          {/* Desktop Tab Menu */}
-          <nav className="hidden lg:flex items-center gap-1">
-            {navigationTabs.map((tab) => {
-              const TabIcon = tab.icon;
-              const isActive = activeTab === tab.id;
-              return (
-                <button
-                  key={tab.id}
-                  id={`tab-${tab.id}`}
-                  onClick={() => setActiveTab(tab.id)}
-                  className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer ${
-                    isActive
-                      ? "bg-white/20 text-white shadow-inner border border-white/10"
-                      : "text-indigo-150 hover:bg-white/10 hover:text-white"
-                  }`}
-                >
-                  <TabIcon className={`w-4 h-4 shrink-0 ${isActive ? 'text-amber-300' : 'text-indigo-200'}`} />
-                  <span>{tab.label}</span>
-                </button>
-              );
-            })}
-          </nav>
-
-          {/* Right Header Operations (Theme toggle & burger menu) */}
-          <div className="flex items-center gap-2">
-            
-            {/* Theme Toggle Button */}
-            <button
-              onClick={() => setDarkMode(!darkMode)}
-              className="p-2.5 rounded-xl border border-indigo-650 dark:border-indigo-850 bg-indigo-800 dark:bg-indigo-900 shadow-xs hover:bg-indigo-650 dark:hover:bg-indigo-800 text-indigo-105 transition-all cursor-pointer active:scale-95"
-              title={darkMode ? "Estilo claro" : "Estilo oscuro"}
-            >
-              {darkMode ? <Sun className="w-4.5 h-4.5 text-amber-400" /> : <Moon className="w-4.5 h-4.5 text-white" />}
-            </button>
-
-            {/* Mobile menu trigger */}
-            <button
-              onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-              className="lg:hidden p-2.5 rounded-xl border border-indigo-650 dark:border-indigo-850 bg-indigo-800 dark:bg-indigo-900 shadow-xs hover:bg-indigo-650 dark:hover:bg-indigo-800 text-indigo-105 cursor-pointer"
-            >
-              {mobileMenuOpen ? <X className="w-4.5 h-4.5 text-white" /> : <Menu className="w-4.5 h-4.5 text-white" />}
-            </button>
+          {/* Row 2: Always visible navigation bar directly below the brand title */}
+          <div className="py-2.5 overflow-x-auto scrollbar-none">
+            <nav className="flex items-center gap-1.5 min-w-max pb-0.5">
+              {navigationTabs.map((tab) => {
+                const TabIcon = tab.icon;
+                const isActive = activeTab === tab.id;
+                return (
+                  <button
+                    key={tab.id}
+                    id={`tab-${tab.id}`}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center gap-2 px-3.5 py-2.5 rounded-xl text-xs font-bold transition-all duration-200 cursor-pointer shrink-0 ${
+                      isActive
+                        ? "bg-white/20 text-white shadow-inner border border-white/10"
+                        : "text-indigo-150 hover:bg-white/10 hover:text-white"
+                    }`}
+                  >
+                    <TabIcon className={`w-4 h-4 shrink-0 ${isActive ? 'text-amber-300' : 'text-indigo-200'}`} />
+                    <span>{tab.label}</span>
+                  </button>
+                );
+              })}
+            </nav>
           </div>
 
         </div>
       </header>
-
-      {/* Mobile Slider Menu */}
-      {mobileMenuOpen && (
-        <div className="lg:hidden fixed inset-x-0 top-16 z-50 bg-indigo-800/95 dark:bg-indigo-950/95 backdrop-blur-lg border-b border-indigo-900 p-6 space-y-3 animate-fade-in text-white">
-          <p className="text-[10px] font-bold text-indigo-200 uppercase tracking-widest px-2.5 mb-2">Secciones de Análisis</p>
-          {navigationTabs.map((tab) => {
-            const TabIcon = tab.icon;
-            const isActive = activeTab === tab.id;
-            return (
-              <button
-                key={tab.id}
-                onClick={() => {
-                  setActiveTab(tab.id);
-                  setMobileMenuOpen(false);
-                }}
-                className={`w-full flex items-center gap-3.5 px-4 py-3.5 rounded-xl font-bold text-sm transition-all cursor-pointer ${
-                  isActive
-                    ? "bg-white/20 text-white border border-white/10 shadow-md"
-                    : "text-indigo-100 hover:bg-white/5"
-                }`}
-              >
-                <TabIcon className={`w-5 h-5 shrink-0 ${isActive ? 'text-amber-400' : 'text-indigo-200'}`} />
-                <span>{tab.label}</span>
-              </button>
-            );
-          })}
-        </div>
-      )}
 
       {/* Main Workspace Frame container */}
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8 md:py-10">
